@@ -1,24 +1,26 @@
 <script setup lang="ts">
-// import BookList from "./views/BookList.vue";
+import { RouterView, useRoute } from "vue-router";
+import VectorBackground from "./components/VectorBackground.vue";
+const route = useRoute();
 </script>
 
 <template>
-  <div class="wrapper">
-    <!-- <BookList />  -->
+  <div id="app">
+    <VectorBackground v-if="route.path !== '/'" />
+    <main class="page-container">
+      <RouterView />
+    </main>
   </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+#app {
+  position: relative;
+  min-height: 100vh;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.page-container {
+  position: relative;
+  z-index: 1;
 }
 </style>
