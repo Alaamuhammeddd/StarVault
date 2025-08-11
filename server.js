@@ -16,6 +16,10 @@ app.use(express.json());
 const bookRoutes = require("./routes/books");
 app.use("/api/books", bookRoutes);
 
+const userRoutes = require("./routes/users");
+app.use("/api/users", userRoutes);
+const loginRoutes = require("./routes/login");
+app.use("/api/login", loginRoutes);
 // Root
 app.get("/", (req, res) => {
   res.send("Library API is running");
