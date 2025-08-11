@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from "vue";
-const props = defineProps({
+import { defineProps } from "vue";
+defineProps({
   fontSize: { type: String, default: "10vw" },
   gap: { type: String, default: "20px" },
   animate: { type: Boolean, default: true },
