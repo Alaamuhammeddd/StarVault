@@ -14,8 +14,8 @@ router.post("/", async (req, res) => {
   if (!isMatch) return res.status(400).send("Invalid password");
 
   // EMAIL VERIFICATION LOGIC
-  // if (!user.isVerified)
-  //   return res.status(400).send("Please verify your email first");
+  if (!user.isVerified)
+    return res.status(400).send("Please verify your email first");
   // if (!process.env.JWT_SECRET) {
   //   return res.status(500).send("JWT secret not configured");
   // }

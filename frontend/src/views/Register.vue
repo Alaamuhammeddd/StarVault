@@ -9,17 +9,27 @@
       />
       <form class="register__form" @submit.prevent="handleRegister">
         <div class="register__field">
-          <label class="register__label" for="name">Name</label>
+          <label class="register__label" for="name">First Name</label>
           <input
             class="register__input"
             type="text"
             id="name"
-            v-model="name"
+            v-model="firstName"
             required
-            placeholder="Enter your name"
+            placeholder="Enter your First name"
           />
         </div>
-
+        <div class="register__field">
+          <label class="register__label" for="name">Last Name</label>
+          <input
+            class="register__input"
+            type="text"
+            id="name"
+            v-model="lastName"
+            required
+            placeholder="Enter your Last name"
+          />
+        </div>
         <div class="register__field">
           <label class="register__label" for="email">Email</label>
           <input
@@ -31,7 +41,17 @@
             placeholder="Enter your email"
           />
         </div>
-
+        <div class="register__field">
+          <label class="register__label" for="name">Username</label>
+          <input
+            class="register__input"
+            type="text"
+            id="name"
+            v-model="username"
+            required
+            placeholder="Enter a Username"
+          />
+        </div>
         <div class="register__field register__field--password">
           <label class="register__label" for="password">Password</label>
           <div class="register__passwordWrapper">
@@ -87,32 +107,55 @@ import { ref } from "vue";
 import { useRouter, RouterLink } from "vue-router";
 
 import VaultTitle from "../components/VaultTitle.vue";
-
-const name = ref("");
+import { useToast } from "vue-toast-notification";
+import api from "../api";
+const toast = useToast();
+const username = ref("");
+const firstName = ref("");
+const lastName = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const router = useRouter();
-function handleRegister() {
+async function handleRegister() {
   if (
-    !name.value ||
+    !firstName.value ||
+    !lastName.value ||
+    !username.value ||
     !email.value ||
     !password.value ||
     !confirmPassword.value
   ) {
-    alert("Please fill in all fields");
+    toast.warning("Please fill in all fields");
     return;
   }
 
   if (password.value !== confirmPassword.value) {
-    alert("Passwords do not match");
+    toast.error("Passwords do not match");
     return;
   }
 
-  alert(`Account created for ${name.value}`);
-  router.push("/login");
+  try {
+    const response = await api.post("/api/users/register", {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      username: username.value,
+      email: email.value,
+      password: password.value,
+    });
+
+    if (response.status === 201 || response.status === 200) {
+      const token = response.data.verificationToken;
+      toast.success(`Account created for ${firstName.value} ${lastName.value}`);
+      router.push(`/verify-email/${token}`);
+    } else {
+      toast.error(response.data.message || "Registration failed");
+    }
+  } catch (error: any) {
+    toast.error(error.response?.data?.message || "Error registering account");
+  }
 }
 </script>
 

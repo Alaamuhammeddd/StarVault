@@ -34,6 +34,12 @@ const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
   { path: "/books", name: "BookList", component: BookList },
+  {
+    path: "/verify-email/:token",
+    name: "VerifyEmail",
+    component: () => import("../components/Verify.vue"),
+    props: true,
+  },
 ];
 
 const router = createRouter({

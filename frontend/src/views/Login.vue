@@ -46,17 +46,36 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import VaultTitle from "../components/VaultTitle.vue";
-
+import api from "../api";
+import { useToast } from "vue-toast-notification";
 const email = ref("");
 const password = ref("");
 const router = useRouter();
+const toast = useToast();
 
-function handleLogin() {
-  if (email.value && password.value) {
-    alert(`Logged in as ${email.value}`);
+async function handleLogin() {
+  if (!email.value || !password.value) {
+    toast.warning("Please fill in all fields");
+    return;
+  }
+
+  try {
+    const { data } = await api.post("/api/login", {
+      email: email.value,
+      password: password.value,
+    });
+
+    // Save the token or user info from backend
+    localStorage.setItem("token", data.token);
+
+    toast.success("Login successful!");
     router.push("/");
-  } else {
-    alert("Please fill in all fields");
+  } catch (error: any) {
+    if (error.response) {
+      toast.error(error.response.data.error || "Login failed");
+    } else {
+      toast.error("An error occurred while logging in");
+    }
   }
 }
 </script>
