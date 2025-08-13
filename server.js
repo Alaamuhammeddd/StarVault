@@ -9,7 +9,10 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: "https://star-vault-2hspghssi-alaas-projects-4aa2ce46.vercel.app",
+    origin: [
+      "https://star-vault-2hspghssi-alaas-projects-4aa2ce46.vercel.app",
+      "https://star-vault-ca9jmci1r-alaas-projects-4aa2ce46.vercel.app",
+    ],
     credentials: true,
   })
 );
