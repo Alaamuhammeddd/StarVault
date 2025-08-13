@@ -30,7 +30,7 @@ onMounted(async () => {
   const token = route.params.token as string;
 
   try {
-    const res = await api.get(`/api/users/verify/${token}`);
+    const res = await api.get(`/users/verify/${token}`);
 
     // If backend returns success, mark verified
     if (res.status === 200) {

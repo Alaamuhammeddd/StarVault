@@ -60,7 +60,7 @@ async function handleLogin() {
   }
 
   try {
-    const { data } = await api.post("/api/login", {
+    const { data } = await api.post("/login", {
       email: email.value,
       password: password.value,
     });
