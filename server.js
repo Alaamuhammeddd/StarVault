@@ -7,12 +7,24 @@ const mongoose = require("mongoose");
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  "https://star-vault.vercel.app", // production
+];
 app.use(
   cors({
-    origin: [
-      "https://star-vault-2hspghssi-alaas-projects-4aa2ce46.vercel.app",
-      "https://star-vault-ca9jmci1r-alaas-projects-4aa2ce46.vercel.app",
-    ],
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        /^https:\/\/star-vault-.*-alaas-projects-4aa2ce46\.vercel\.app$/.test(
+          origin
+        )
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
