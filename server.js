@@ -8,7 +8,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://star-vault.vercel.app"], // allow your Vercel frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // if using cookies or auth headers
+  })
+);
 app.use(morgan("dev"));
 app.use(express.json());
 
