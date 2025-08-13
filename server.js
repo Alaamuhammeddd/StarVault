@@ -29,7 +29,10 @@ app.use(
   })
 );
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    /^https:\/\/star-vault-.*-alaas-projects-4aa2ce46\.vercel\.app$/
+  );
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
