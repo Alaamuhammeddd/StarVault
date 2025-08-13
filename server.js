@@ -11,32 +11,20 @@ app.use(
   cors({
     origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // if using cookies or auth headers
+    credentials: true,
   })
 );
 app.use(morgan("dev"));
 app.use(express.json());
 
 // Routes
-const bookRoutes = require("./routes/books");
-app.use("/api/books", bookRoutes);
+app.use("/api/books", require("./routes/books"));
+app.use("/api/users", require("./routes/users"));
+app.use("/api/login", require("./routes/login"));
 
-const userRoutes = require("./routes/users");
-app.use("/api/users", userRoutes);
+app.get("/", (req, res) => res.send("Library API is running"));
+app.get("/api/test", (req, res) => res.json({ message: "Backend working!" }));
 
-const loginRoutes = require("./routes/login");
-app.use("/api/login", loginRoutes);
-
-// Root
-app.get("/", (req, res) => {
-  res.send("Library API is running");
-});
-
-app.get("/api/test", (req, res) => {
-  res.json({ message: "Backend working!" });
-});
-
-// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -47,5 +35,4 @@ mongoose
   )
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Export for Vercel
 module.exports = app;
