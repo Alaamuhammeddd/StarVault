@@ -1,2 +1,2 @@
-const app = require("../server");
+const app = require("../routes/server");
 module.exports = app;
