@@ -17,18 +17,18 @@ app.use(
 app.use(morgan("dev"));
 app.use(express.json());
 
-// Routes (no /api prefix now)
+// Routes (with /api prefix for Vercel)
 const bookRoutes = require("./routes/books");
-app.use("/books", bookRoutes);
+app.use("/api/books", bookRoutes);
 
 const userRoutes = require("./routes/users");
-app.use("/users", userRoutes);
+app.use("/api/users", userRoutes);
 
 const loginRoutes = require("./routes/login");
-app.use("/login", loginRoutes);
+app.use("/api/login", loginRoutes);
 
 // Test route
-app.get("/test", (req, res) => {
+app.get("/api/test", (req, res) => {
   res.json({ message: "Backend working!" });
 });
 
