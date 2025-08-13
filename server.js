@@ -18,13 +18,24 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Routes
-app.use("/api/books", require("./routes/books"));
-app.use("/api/users", require("./routes/users"));
-app.use("/api/login", require("./routes/login"));
+const bookRoutes = require("./routes/books");
+app.use("/api/books", bookRoutes);
 
-app.get("/", (req, res) => res.send("Library API is running"));
-app.get("/api/test", (req, res) => res.json({ message: "Backend working!" }));
+const userRoutes = require("./routes/users");
+app.use("/api/users", userRoutes);
 
+const loginRoutes = require("./routes/login");
+app.use("/api/login", loginRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Library API is running");
+});
+
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend working!" });
+});
+
+// MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -35,4 +46,4 @@ mongoose
   )
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-module.exports = app;
+module.exports = app; // <-- Export for serverless
