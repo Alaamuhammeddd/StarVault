@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(
   cors({
-    origin: ["https://star-vault.vercel.app"], // allow your Vercel frontend
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // if using cookies or auth headers
   })
