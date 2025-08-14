@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const app = express();
 
 // Middleware
+// --- CORS middleware: must be first ---
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
