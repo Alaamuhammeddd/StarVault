@@ -10,7 +10,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://star-vault-front.vercel.app", // frontend prod
+      process.env.PORT,
+      "*", // frontend prod
       "http://localhost:5173", // frontend dev
       "http://localhost:3000", // local dev
     ],
