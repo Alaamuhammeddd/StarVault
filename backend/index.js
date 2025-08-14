@@ -11,6 +11,7 @@ app.use(
   cors({
     origin: [
       "https://star-vault-front.vercel.app", // frontend prod
+      "http://localhost:5173", // frontend dev
       "http://localhost:3000", // local dev
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -22,21 +23,23 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Routes (no /api prefix now)
-const bookRoutes = require("./books");
-app.use("/books", bookRoutes);
+const bookRoutes = require("./routes/books");
+app.use("/api/books", bookRoutes);
 
-const userRoutes = require("./users");
-app.use("/users", userRoutes);
+const userRoutes = require("./routes/users");
+app.use("/api/users", userRoutes);
 
-const loginRoutes = require("./login");
-app.use("/login", loginRoutes);
+const loginRoutes = require("./routes/login");
+app.use("/api/login", loginRoutes);
 
 // Test route
 app.get("/test", (req, res) => {
   res.json({ message: "Backend working!" });
 });
 
-// MongoDB connection
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`🚀 Server running on port ${process.env.PORT || 3000}`);
+});
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,

@@ -60,10 +60,13 @@ async function handleLogin() {
   }
 
   try {
-    const { data } = await api.post("/api/login", {
-      email: email.value,
-      password: password.value,
-    });
+    const { data } = await api.post(
+      `${import.meta.env.VITE_VUE_APP_API_URL}/login`,
+      {
+        email: email.value,
+        password: password.value,
+      }
+    );
 
     // Save the token or user info from backend
     localStorage.setItem("token", data.token);
