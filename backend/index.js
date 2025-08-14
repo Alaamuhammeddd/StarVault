@@ -9,27 +9,21 @@ const app = express();
 // Middleware
 // --- CORS middleware: must be first ---
 const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
-  "https://star-vault-alaas-projects-4aa2ce46.vercel.app", // production
+  "http://localhost:5173", // local frontend
+  "https://star-vault-lkma.vercel.app", // production frontend
+  "http://localhost:3000", // local dev
 ];
+
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (
-        !origin ||
-        allowedOrigins.includes(origin) ||
-        /^https:\/\/star-vault-.*-alaas-projects-4aa2ce46\.vercel\.app$/.test(
-          origin
-        )
-      ) {
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("CORS not allowed"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
+    credentials: true, // allow cookies/auth headers if needed
   })
 );
 
