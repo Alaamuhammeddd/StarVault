@@ -65,6 +65,9 @@ async function handleLogin() {
       {
         email: email.value,
         password: password.value,
+      },
+      {
+        withCredentials: true, // if using axios
       }
     );
 
