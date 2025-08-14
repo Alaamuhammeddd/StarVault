@@ -7,14 +7,26 @@ const mongoose = require("mongoose");
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://star-vault-alaas-projects-4aa2ce46.vercel.app", // production
+];
 app.use(
   cors({
-    origin: [
-      process.env.PORT,
-      "*", // frontend prod
-      "http://localhost:5173", // frontend dev
-      "http://localhost:3000", // local dev
-    ],
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        /^https:\/\/star-vault-.*-alaas-projects-4aa2ce46\.vercel\.app$/.test(
+          origin
+        )
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
