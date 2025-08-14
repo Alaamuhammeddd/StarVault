@@ -3,7 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 require("dotenv").config();
 const mongoose = require("mongoose");
-
+const serverless = require("serverless-http");
 const app = express();
 
 // Middleware
@@ -58,4 +58,4 @@ mongoose
   )
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-module.exports = app;
+module.exports = serverless(app);
