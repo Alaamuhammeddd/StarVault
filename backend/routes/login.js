@@ -1,5 +1,4 @@
 const express = require("express");
-
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -15,21 +14,27 @@ router.post("/", async (req, res) => {
   if (!isMatch) return res.status(400).send("Invalid password");
 
   // EMAIL VERIFICATION LOGIC
-  if (!user.isVerified)
-    return res.status(400).send("Please verify your email first");
+
   // if (!process.env.JWT_SECRET) {
   //   return res.status(500).send("JWT secret not configured");
   // }
-
-  // Generate JWT token
-  // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-  //   expiresIn: "1d",
-  // });
-  // res.json({ token });
+  if (user.role !== "admin" && !user.isVerified) {
+    return res.status(403).json({
+      message: "Please verify your email first",
+      redirect: "/verify-email",
+    });
+  }
+  const token = jwt.sign(
+    { id: user._id, role: user.role }, // role here!
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
 
   res.json({
     message: "Login successful",
-    user: { id: user._id, email: user.email },
+    token,
+    role: user.role,
+    redirect: user.role === "admin" ? "/admin-dashboard" : "/user-home",
   });
 });
 

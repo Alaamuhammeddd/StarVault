@@ -41,6 +41,7 @@ exports.registerUser = async (req, res) => {
       isVerified: false,
       verificationToken,
       verificationTokenExpires,
+      role: "user",
     });
 
     const result = await user.save();
