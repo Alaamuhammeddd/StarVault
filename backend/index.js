@@ -30,7 +30,6 @@ app.use(
 app.use(morgan("dev"));
 app.use(express.json());
 
-// Routes (no /api prefix now)
 const bookRoutes = require("./routes/books");
 app.use("/api/books", bookRoutes);
 const quoteRoutes = require("./routes/quoteOfTheday");
