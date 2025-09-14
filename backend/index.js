@@ -31,14 +31,14 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 const bookRoutes = require("./routes/books");
-app.use("/api/books", bookRoutes);
+app.use("/books", bookRoutes);
 const quoteRoutes = require("./routes/quoteOfTheday");
-app.use("/api/quote", quoteRoutes);
+app.use("/quote", quoteRoutes);
 const userRoutes = require("./routes/users");
-app.use("/api/users", userRoutes);
+app.use("/users", userRoutes);
 
 const loginRoutes = require("./routes/login");
-app.use("/api/login", loginRoutes);
+app.use("/login", loginRoutes);
 
 // Test route
 app.get("/test", (req, res) => {
