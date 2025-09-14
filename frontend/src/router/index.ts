@@ -59,6 +59,7 @@ router.beforeEach((to, from, next) => {
   const role = localStorage.getItem("role");
   if (to.meta.requiresAdmin && role !== "admin") {
     return next("/"); // send back to login/home
+    console.log(from);
   }
   next();
 });
