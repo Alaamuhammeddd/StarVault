@@ -30,15 +30,23 @@ router.post("/", async (req, res) => {
     { expiresIn: "1d" }
   );
 
+  // Log the user details for debugging
+  console.log("Login successful for user:", {
+    email: user.email,
+    role: user.role,
+    id: user._id,
+  });
+
   res.json({
     message: "Login successful",
     user: {
       id: user._id,
       email: user.email,
-      role: user.role,
+      role: user.role, // This should be 'admin' for admin users
       firstName: user.firstName,
       lastName: user.lastName,
       username: user.username,
+      isVerified: user.isVerified,
     },
     token,
   });

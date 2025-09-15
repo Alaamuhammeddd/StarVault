@@ -79,7 +79,7 @@ async function handleLogin() {
 
   try {
     const response = await api.post(
-      `${import.meta.env.VITE_VUE_APP_API_URL}/login`,
+      `${import.meta.env.VITE_VUE_APP_API_URL}/api/login`,
       { email: email.value, password: password.value },
       { withCredentials: true }
     );
@@ -95,13 +95,19 @@ async function handleLogin() {
 
     // Save user info and role
     localStorage.setItem("user", JSON.stringify(data.user));
-    // Set role from user object or default to 'user'
-    localStorage.setItem("role", data.user.role || "user");
-    console.log("Saved user role:", data.user.role); // Debug log
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.user.role);
+    console.log("Login successful - Role:", data.user.role); // Debug log
     toast.success(data.message);
 
-    // Redirect to dashboard
-    router.push("/dashboard");
+    // Redirect based on role
+    if (data.user.role === "admin") {
+      console.log("Redirecting to admin dashboard");
+      router.push("/admin-dashboard");
+    } else {
+      console.log("Redirecting to user dashboard");
+      router.push("/dashboard");
+    }
   } catch (error: any) {
     console.error("Login error:", error); // Debug log
     if (error.response) {
