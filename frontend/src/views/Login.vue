@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login__card">
       <!-- Title -->
-      <VaultT
+      <VaultTitle
         fontSize="32px"
         :animate="false"
         gap="5px"
