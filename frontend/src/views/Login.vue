@@ -84,7 +84,7 @@ async function handleLogin() {
       { withCredentials: true }
     );
 
-    console.log("Login response:", response); // Debug log
+    console.log("Login response:", response);
     const { data } = response;
 
     if (!data.message || !data.user) {
@@ -93,8 +93,11 @@ async function handleLogin() {
       return;
     }
 
-    // Save user info
+    // Save user info and role
     localStorage.setItem("user", JSON.stringify(data.user));
+    // Set role from user object or default to 'user'
+    localStorage.setItem("role", data.user.role || "user");
+    console.log("Saved user role:", data.user.role); // Debug log
     toast.success(data.message);
 
     // Redirect to dashboard

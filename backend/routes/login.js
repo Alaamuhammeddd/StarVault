@@ -32,9 +32,15 @@ router.post("/", async (req, res) => {
 
   res.json({
     message: "Login successful",
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+    },
     token,
-    role: user.role,
-    redirect: user.role === "admin" ? "/admin-dashboard" : "/user-home",
   });
 });
 
