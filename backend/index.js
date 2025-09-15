@@ -27,8 +27,12 @@ app.use(
   })
 );
 
+// Request logging
 app.use(morgan("dev"));
+
+// Body parsing middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const bookRoutes = require("./routes/books");
 app.use("/books", bookRoutes);
@@ -41,21 +45,51 @@ const loginRoutes = require("./routes/login");
 app.use("/login", loginRoutes);
 
 // Test route
-app.get("/test", (req, res) => {
-  res.json({ message: "Backend working!" });
+app.get("/api/test", (req, res) => {
+  res.json({ message: "API works on Vercel!" });
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`🚀 Server running on port ${process.env.PORT || 3000}`);
-});
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then((result) =>
-    console.log("✅ Connected to MongoDB", result.connection.name)
-  )
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+// // Error handling middleware
+// app.use((err, req, res, next) => {
+//   console.error("🔥 Global error:", err);
+//   console.error("🔥 Message:", err.message);
+//   console.error("🔥 Stack:", err.stack);
+//   res.status(err.status || 500).json({
+//     error: err.message || "Something went wrong!",
+//   });
+// });
 
+// 404 handler
+// app.use((req, res) => {
+//   res.status(404).json({
+//     error: `Cannot ${req.method} ${req.url}`,
+//   });
+// });
+
+// Connect to MongoDB first
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("✅ Connected to MongoDB:", mongoose.connection.name);
+
+    // Start server after DB connection
+    if (process.env.NODE_ENV !== "production") {
+      const PORT = process.env.PORT || 3000;
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+      });
+    }
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1);
+  }
+}
+
+// Start the server
+startServer();
+
+// Export for serverless
 module.exports = serverless(app);

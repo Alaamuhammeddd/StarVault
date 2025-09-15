@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login__card">
       <!-- Title -->
-      <VaultTitle
+      <VaultT
         fontSize="32px"
         :animate="false"
         gap="5px"
@@ -78,22 +78,38 @@ async function handleLogin() {
   }
 
   try {
-    const { data } = await api.post(
+    const response = await api.post(
       `${import.meta.env.VITE_VUE_APP_API_URL}/login`,
       { email: email.value, password: password.value },
       { withCredentials: true }
     );
 
-    // Save token & role
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("role", data.role);
+    console.log("Login response:", response); // Debug log
+    const { data } = response;
 
-    // Redirect based on backend response
-    router.push(data.redirect);
-    toast.success("Login successful!");
+    if (!data.message || !data.user) {
+      console.error("Missing required fields in response:", data);
+      toast.error("Invalid server response. Please try again.");
+      return;
+    }
+
+    // Save user info
+    localStorage.setItem("user", JSON.stringify(data.user));
+    toast.success(data.message);
+
+    // Redirect to dashboard
+    router.push("/dashboard");
   } catch (error: any) {
+    console.error("Login error:", error); // Debug log
     if (error.response) {
-      toast.error(error.response.data.error || "Login failed");
+      console.error("Error response:", error.response); // Debug log
+      toast.error(
+        error.response.data?.error ||
+          error.response.data?.message ||
+          "Login failed"
+      );
+    } else if (error.request) {
+      toast.error("No response received from server");
     } else {
       toast.error("An error occurred while logging in");
     }

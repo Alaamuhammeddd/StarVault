@@ -13,7 +13,7 @@
           <input
             class="register__input"
             type="text"
-            id="name"
+            id="first name"
             v-model="firstName"
             required
             placeholder="Enter your First name"
@@ -24,7 +24,7 @@
           <input
             class="register__input"
             type="text"
-            id="name"
+            id="last name"
             v-model="lastName"
             required
             placeholder="Enter your Last name"
@@ -138,23 +138,70 @@ async function handleRegister() {
   }
 
   try {
-    const response = await api.post("/api/users/register", {
+    console.log("Sending registration request with data:", {
       firstName: firstName.value,
       lastName: lastName.value,
       username: username.value,
       email: email.value,
-      password: password.value,
+      password: "[REDACTED]",
+    });
+
+    const response = await api.post(
+      `${import.meta.env.VITE_VUE_APP_API_URL}/users/register`,
+      {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        username: username.value,
+        email: email.value,
+        password: password.value,
+      }
+    );
+
+    console.log("Registration response:", {
+      status: response.status,
+      data: response.data,
     });
 
     if (response.status === 201 || response.status === 200) {
-      const token = response.data.verificationToken;
-      toast.success(`Account created for ${firstName.value} ${lastName.value}`);
-      router.push(`/verify-email/${token}`);
+      const { verificationToken, message } = response.data;
+
+      if (!verificationToken) {
+        console.error("Missing verification token in response:", response.data);
+        toast.error(
+          "Registration successful but verification token is missing"
+        );
+        return;
+      }
+
+      toast.success(
+        message || `Account created for ${firstName.value} ${lastName.value}`
+      );
+      router.push(`/verify-email/${verificationToken}`);
     } else {
+      console.error("Unexpected response status:", response.status);
       toast.error(response.data.message || "Registration failed");
     }
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Error registering account");
+    console.error("Registration error:", error);
+
+    if (error.response) {
+      console.error("Error response:", {
+        status: error.response.status,
+        data: error.response.data,
+      });
+      toast.error(
+        error.response.data?.details ||
+          error.response.data?.message ||
+          error.response.data?.error ||
+          "Registration failed"
+      );
+    } else if (error.request) {
+      console.error("No response received");
+      toast.error("No response received from server");
+    } else {
+      console.error("Error setting up request:", error.message);
+      toast.error("Error registering account");
+    }
   }
 }
 </script>
