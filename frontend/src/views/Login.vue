@@ -79,7 +79,7 @@ async function handleLogin() {
 
   try {
     const response = await api.post(
-      `${import.meta.env.VITE_VUE_APP_API_URL}/api/login`,
+      `${import.meta.env.VITE_VUE_APP_API_URL}/login`,
       { email: email.value, password: password.value },
       { withCredentials: true }
     );
